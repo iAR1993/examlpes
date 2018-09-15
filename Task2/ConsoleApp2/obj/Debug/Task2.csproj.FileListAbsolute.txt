@@ -1,0 +1,7 @@
+D:\Task2\ConsoleApp2\bin\Debug\Task2.exe.config
+D:\Task2\ConsoleApp2\bin\Debug\Task2.exe
+D:\Task2\ConsoleApp2\bin\Debug\Task2.pdb
+D:\Task2\ConsoleApp2\obj\Debug\Task2.csprojResolveAssemblyReference.cache
+D:\Task2\ConsoleApp2\obj\Debug\Task2.csproj.CoreCompileInputs.cache
+D:\Task2\ConsoleApp2\obj\Debug\Task2.exe
+D:\Task2\ConsoleApp2\obj\Debug\Task2.pdb

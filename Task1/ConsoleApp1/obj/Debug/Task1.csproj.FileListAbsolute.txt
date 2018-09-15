@@ -1,0 +1,6 @@
+D:\Task1\ConsoleApp1\bin\Debug\Task1.exe.config
+D:\Task1\ConsoleApp1\bin\Debug\Task1.exe
+D:\Task1\ConsoleApp1\bin\Debug\Task1.pdb
+D:\Task1\ConsoleApp1\obj\Debug\Task1.csproj.CoreCompileInputs.cache
+D:\Task1\ConsoleApp1\obj\Debug\Task1.exe
+D:\Task1\ConsoleApp1\obj\Debug\Task1.pdb
