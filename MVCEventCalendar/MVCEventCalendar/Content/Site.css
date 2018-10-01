@@ -15,4 +15,12 @@ select,
 textarea {
     max-width: 280px;
 }
+.fc-state-highlight {
+    background: red;
+}
+
+.fc-time-grid-event { /* the generic .fc-bg already does position */
+    opacity: .25!important;
+}
+
 

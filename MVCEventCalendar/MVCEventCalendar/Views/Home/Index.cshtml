@@ -5,7 +5,8 @@
 
 <h2>Index</h2>
 
-<div id="calender"></div>
+    <div id="calenderList" style="float:left; width:400px;"></div>
+    <div id="calenderWeek" style="float:right; width:600px;"></div>
 
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -53,12 +54,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label><input type="checkbox" id="chkIsFullDay" checked="checked"/> full day event </label>
-                        </div>
-                    </div>
-                    <div class="form-group" id="divEndDate" style="display:none">
+                    <div class="form-group" id="divEndDate">
                         <label>End</label>
                         <div class="input-group date" id="dtp2">
                             <input type="text" id="txtEnd" class="form-control" />
@@ -115,9 +111,8 @@
                                 title: v.Subject,
                                 description: v.Description,
                                 start: moment(v.Start),
-                                end: v.End != null ? moment(v.End) : null,
-                                color: v.ThemeColor,
-                                allDay: v.IsFullDay
+                                end: moment(v.End),
+                                color: v.ThemeColor
                             });
                         })
                         GenerateCalender(events);
@@ -128,19 +123,29 @@
                 })
             }
             function GenerateCalender(events) {
-                $('#calender').fullCalendar('destroy');
-                $('#calender').fullCalendar({
-                    contentHeight: 400,
+
+                $('#calenderList,#calenderWeek').fullCalendar('destroy');
+
+                $('#calenderList').fullCalendar({
+                    height: 500,
+                    customButtons: {
+                        myCustomButton: {
+                            text: 'Add Course',
+                            click: function () {
+                                newAddForm();
+                                $('#calenderList,#calenderWeek').fullCalendar('unselect');
+                            }
+                        }
+                    },
                     defaultDate: new Date(),
                     timeFormat: 'h(:mm)a',
-                    minTime: "11:00:00",
-                    maxTime: "18:00:00",
+                    minTime: "09:00:00",
+                    maxTime: "17:00:00",
                     header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'agendaWeek,month'
+                        left: 'prev,next today myCustomButton',
+                        right: 'listWeek'
                     },
-                    defaultView: 'agendaWeek',
+                    defaultView: 'listWeek',
                     eventLimit: true,
                     eventColor: '#378006',
                     events: events,
@@ -148,28 +153,54 @@
                         selectedEvent = calEvent;
                         $('#myModal #eventTitle').text(calEvent.title);
                         var $description = $('<div/>');
-                        $description.append($('<p/>').html('<b>Start:</b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+                        $description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
                         if (calEvent.end != null) {
-                            $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                            $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
                         }
-                        $description.append($('<p/>').html('<b>Desription</b>' + calEvent.description));
+                        $description.append($('<p/>').html('<b>Desription: </b>' + calEvent.description));
+                        $('#myModal #pDetails').empty().html($description);
+
+                        $('#myModal').modal();
+                    },
+                    selectable: true,
+                    eventMouseover: function (calEvent, jsEvent, view) {
+                        $('#calenderWeek').fullCalendar('select', calEvent.start, calEvent.end);
+                      
+                    },
+                })
+                $('#calenderWeek').fullCalendar({
+                    height: 430,
+                    defaultDate: new Date(),
+                    timeFormat: 'h(:mm)a',
+                    minTime: "09:00:00",
+                    maxTime: "17:00:00",
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'agendaWeek'
+                    },
+                    defaultView: 'agendaWeek',
+                    allDaySlot: false,
+                    eventLimit: true,
+                    eventColor: '#378006',
+                    events: events,
+                    eventClick: function (calEvent, jsEvent, view) {
+                        selectedEvent = calEvent;
+                        $('#myModal #eventTitle').text(calEvent.title);
+                        var $description = $('<div/>');
+                        $description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+                        if (calEvent.end != null) {
+                            $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                        }
+                        $description.append($('<p/>').html('<b>Desription: </b>' + calEvent.description));
                         $('#myModal #pDetails').empty().html($description);
 
                         $('#myModal').modal();
                     },
                     selectable: true,
                     select: function (start, end) {
-                        selectedEvent = {
-                            eventID: 0,
-                            title: '',
-                            description: '',
-                            start: start,
-                            end: end,
-                            IsFullDay: false,
-                            color:''
-                        };
-                        openAddEditForm();
-                        $('#calender').fullCalendar('unselect');
+                        $(".fc-highlight").css("background", "black");
+                        $(".fc-time-grid-event").css("opacity", ".9");
                     },
                     editable: true,
                     eventDrop: function (event) {
@@ -177,15 +208,15 @@
                             EventId: event.eventID,
                             Subject: event.title,
                             Start: event.start.format('DD/MM/YYYY HH:mm A'),
-                            End: event.end != null ? event.end.format('DD/MM/YYYY HH:mm A'):null,
+                            End: event.end.format('DD/MM/YYYY HH:mm A'),
                             Description: event.description,
                             ThemeColor: event.color
                         };
                         SaveEvent(data);
                     }
                 })
-            }
 
+            }
             $('#btnEdit').click(function () {
                 openAddEditForm();
             })
@@ -215,23 +246,23 @@
 
             });
 
-            $('#chkIsFullDay').change(function () {
-                if ($(this).is(':checked')) {
-                    $('#divEndDate').hide();
-                }
-                else {
-                    $('#divEndDate').show();
-                }
-            });
+            function newAddForm() {
+                    $('#hdEventID').val('');
+                    $('#txtSubject').val('Course');
+                    $('#txtStart').val('');
+                    $('#txtEnd').val('');
+                    $('#txtDescription').val('');
+                    $('#ddColor').val('');
+                $('#myModal').modal('hide');
+                $('#myModalSave').modal();
+            }
 
             function openAddEditForm() {
                 if (selectedEvent != null) {
                     $('#hdEventID').val(selectedEvent.eventID);
                     $('#txtSubject').val(selectedEvent.title);
                     $('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY HH:mm A'));
-                    $('#chkIsFullDay').prop("checked", selectedEvent.allDay || false);
-                    $('#chkIsFullDay').change();
-                    $('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY HH:mm A'):'');
+                    $('#txtEnd').val(selectedEvent.end.format('DD/MM/YYYY HH:mm A'));
                     $('#txtDescription').val(selectedEvent.description);
                     $('#ddColor').val(selectedEvent.color);
                 }
@@ -244,24 +275,26 @@
                     alert('Start date reauired');
                     return;
                 }
-                if ($('#chkIsFullDay').is('checked') == false && $('#txtEnd').val().trim() == '') {
-                    alert('End date required');
-                    return;
-                }
-                else {
                     var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
                     var endDate = moment($('#txtEnd').val(), "DD/MM/YYYY HH:mm A").toDate();
                     if (startDate > endDate) {
                         alert('invalid date name');
                         return;
                     }
-                }
+                    if (startDate.getHours() < 09) {
+                        alert('invalid time');
+                        return;
+                    }
+                    if (endDate.getHours() > 17) {
+                        alert('invalid time');
+                        return;
+                    }
 
                 var data = {
                     EventId: $('#hdEventID').val(),
                     Subject: $('#txtSubject').val().trim(),
                     Start: $('#txtStart').val().trim(),
-                    End: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),
+                    End: $('#txtEnd').val().trim(),
                     Description: $('#txtDescription').val(),
                     ThemeColor: $('#ddColor').val()
                 }

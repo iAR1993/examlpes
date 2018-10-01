@@ -38,7 +38,7 @@ namespace MVCEventCalendar.Controllers
                         v.Start = e.Start;
                         v.End = e.End;
                         v.Description = e.Description;
-                        v.IsFullDay = e.IsFullDay;
+                        //v.IsFullDay = e.IsFullDay;
                         v.ThemeColor = e.ThemeColor;
                     }
                 }
